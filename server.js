@@ -1,24 +1,40 @@
+const EventEmitter = require('events');
 const fs = require('fs')
-const schedule = require('node-schedule')
 const request = require("request")
 require('dotenv').config({path: __dirname + '/.env'})
 
+
+//ENVIRONMENTAL VARIABLES
 let phone_number_id = process.env.PHONE_NUMBER_ID
 let access_token = process.env.ACCESS_TOKEN
 let recipient_phone_number = process.env.RECIPIENT_PHONE_NUMBER
-
-
 let url = `https://graph.facebook.com/v15.0/${phone_number_id}/messages`
 
+const eventEmitter = new EventEmitter();
+const express = require('express');
+const app = express();
+
+// Background worker function
+const workerFunction = () => {
+    setInterval(() => {
+        // Emit event
+        eventEmitter.emit('checkBirthdatesEvent', { message: 'It is a new day. Check if today is someones birthday.' });
+    }, 60000); // 86400000 is a day
+}
+
+// Start background worker
+workerFunction();
+
+// Listen for custom event
+eventEmitter.on('checkBirthdatesEvent', (data) => {
+    evaluateBirthDays(data.message);
+});
 
 
 
-const job = schedule.scheduleJob("1 * * * * *",()=>{
-    evaluateBirthDays()
-})
 
-
-function evaluateBirthDays(){
+function evaluateBirthDays(message){
+    console.log(message)
     let birthdates = JSON.parse(fs.readFileSync("./birthdates.json","utf-8"))
     birthdates.forEach(birthdate => {
         if(compareBirthDate(birthdate.dateOfBirth)){
@@ -26,14 +42,6 @@ function evaluateBirthDays(){
             sendWhatsappMessage(birthdate)
         }
     })
-}
-
-
-function obtainCurrentDate(){
-    //ISOString returns date in UTC-0
-    //TODO: Contemplate local timezone
-    let date_ob = new Date().toISOString().slice(0,-14).split("-")
-    return `${date_ob[2]}/${date_ob[1]}/${date_ob[0]}`
 }
 
 function compareBirthDate(birthdate){
@@ -45,6 +53,12 @@ function compareBirthDate(birthdate){
     }
 }
 
+function obtainCurrentDate(){
+    //ISOString returns date in UTC-0
+    //TODO: Contemplate local timezone
+    let date_ob = new Date().toISOString().slice(0,-14).split("-")
+    return `${date_ob[2]}/${date_ob[1]}/${date_ob[0]}`
+}
 
 function sendWhatsappMessage(birthdate){
     let data = {
@@ -70,3 +84,11 @@ function sendWhatsappMessage(birthdate){
             console.log(body)
         })  
 }
+
+app.get('/', (req, res) => {
+    res.send('Server is listening for events from the worker.');
+});
+
+app.listen(3000, () => {
+    console.log('Express server started on port 3000');
+});
