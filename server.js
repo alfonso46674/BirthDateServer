@@ -14,7 +14,7 @@ let url = `https://graph.facebook.com/v15.0/${phone_number_id}/messages`
 
 
 const job = schedule.scheduleJob("1 * * * * *",()=>{
-    // evaluateBirthDays()
+    evaluateBirthDays()
 })
 
 
@@ -22,19 +22,22 @@ function evaluateBirthDays(){
     let birthdates = JSON.parse(fs.readFileSync("./birthdates.json","utf-8"))
     birthdates.forEach(birthdate => {
         if(compareBirthDate(birthdate.dateOfBirth)){
+            console.log("Sending message to congratulate " + birthdate.name)
             sendWhatsappMessage(birthdate)
         }
     })
 }
-evaluateBirthDays()
 
 
 function obtainCurrentDate(){
+    //ISOString returns date in UTC-0
+    //TODO: Contemplate local timezone
     let date_ob = new Date().toISOString().slice(0,-14).split("-")
     return `${date_ob[2]}/${date_ob[1]}/${date_ob[0]}`
 }
 
 function compareBirthDate(birthdate){
+    //slice off the year
     if(obtainCurrentDate().slice(0,-5) === birthdate.slice(0,-5)){
         return true
     } else {
@@ -65,14 +68,5 @@ function sendWhatsappMessage(birthdate){
         body: JSON.stringify(data)
         }, function(error,response,body){
             console.log(body)
-        })
-    
-    // fetch(url,postReq)
-    // .then(data => {
-    //     return data.json()
-    // })
-    // .then(res => {
-    //     console.log(res)
-    // })
-    // .catch(error => console.log(error))
+        })  
 }
