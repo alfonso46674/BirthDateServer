@@ -12,6 +12,7 @@
 <script>
 import { ref } from 'vue'
 import Popup from './PopupDisplay.vue' // import the popup component
+import {url} from '../config/env_variables'
 
 export default {
   components: {
@@ -24,15 +25,16 @@ export default {
     const popupMessage = ref('')
     async function submitForm() {
       try {
-        const response = await fetch('your-server-url', {
+        const response = await fetch(`${url}/new`, {
           method: 'POST',
           body: JSON.stringify({ name: name.value, dateOfBirth: dateOfBirth.value }),
           headers: { 'Content-Type': 'application/json' },
         })
+        console.log(response)
         if (response.ok) {
-          popupMessage.value = 'Data saved successfully!'
+          popupMessage.value = 'Birthdate information saved successfully!'
         } else {
-          popupMessage.value = 'An error occurred while saving the data. Please try again.'
+          popupMessage.value = 'An error occurred while saving the birthdate information. Please try again.'
         }
         showPopup.value = true
       } catch (error) {
