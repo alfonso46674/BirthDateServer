@@ -1,18 +1,21 @@
-require('dotenv').config({path: __dirname + '/.env'})
+const express = require('express');
 const EventEmitter = require('events');
+const cors = require('cors')
 
+
+
+const router = require('./router/index')
 const birthdays = require('./helpers/birthday')
-
+require('dotenv').config({path: __dirname + '/.env'})
 
 const eventEmitter = new EventEmitter();
-const router = require('./router/index')
-const express = require('express');
 const app = express();
 
 const {json} = express
 
 //basic parse configuration
 app.use(json())
+app.use(cors())
 
 // Background worker function
 const workerFunction = () => {
