@@ -18,7 +18,7 @@ app.use(json())
 app.use(cors())
 
 //use vue build folder to serve content
-app.use(express.static(path.join(__dirname,'../ui/dist/')))
+app.use(express.static(path.join(__dirname,'./ui/dist/')))
 
 // Background worker function
 const workerFunction = () => {
