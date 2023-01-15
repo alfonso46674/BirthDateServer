@@ -9,12 +9,17 @@ const router = require('./router/index')
 const express = require('express');
 const app = express();
 
+const {json} = express
+
+//basic parse configuration
+app.use(json())
+
 // Background worker function
 const workerFunction = () => {
     setInterval(() => {
         // Emit event
         eventEmitter.emit('checkBirthdatesEvent', { message: 'It is a new day. Check if today is someones birthday.' });
-    }, 60000); // 86400000 is a day
+    }, 15000); // 86400000 is a day
 }
 
 // Start background worker
