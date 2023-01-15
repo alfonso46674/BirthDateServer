@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-let database = '/home/alfonso/WebProjects/birthdayServer/birthdates.json'
+let database = process.cwd() + "/birthdates.json"
 
 function addDataToDB(dataToAdd){
     try {
