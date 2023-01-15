@@ -1,7 +1,7 @@
 const express = require('express');
 const EventEmitter = require('events');
 const cors = require('cors')
-
+const path = require('path')
 
 
 const router = require('./router/index')
@@ -16,6 +16,9 @@ const {json} = express
 //basic parse configuration
 app.use(json())
 app.use(cors())
+
+//use vue build folder to serve content
+app.use(express.static(path.join(__dirname,'../ui/dist/')))
 
 // Background worker function
 const workerFunction = () => {
