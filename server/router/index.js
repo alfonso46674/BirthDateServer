@@ -27,6 +27,15 @@ router.post('/new',(req,res)=>{
     }
 })
 
+router.get('/data',(req,res)=>{
+    try {
+        let db = dbJSON.obtainDataDB()
+        res.status(200).send(db)
+    } catch (error) {
+        res.status(500).send({'Error while obtaining data':error})
+    }
+})
+
 router.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,'../ui/dist/index.html'))
 })
