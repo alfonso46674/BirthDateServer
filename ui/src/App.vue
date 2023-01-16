@@ -1,14 +1,19 @@
 <template>
-  <add-birthday></add-birthday>
+  <div>
+    <add-birthday></add-birthday>
+    <birthdate-table></birthdate-table>
+  </div>
 </template>
 
 <script>
 import AddBirthday from './components/AddBirthday.vue'
+import BirthdateTable from './components/BirthdateTable.vue'
 
 export default {
   name: 'App',
   components: {
-    AddBirthday
+    AddBirthday,
+    BirthdateTable
   }
 }
 </script>
