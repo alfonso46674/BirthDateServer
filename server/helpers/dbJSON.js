@@ -25,6 +25,11 @@ function addDataToDB(dataToAdd){
     }
 }
 
+function obtainDataDB() {
+    return fs.readFileSync(database,'utf-8')
+}
+
 module.exports = {
-    addDataToDB
+    addDataToDB,
+    obtainDataDB
 }
