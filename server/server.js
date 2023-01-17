@@ -25,7 +25,7 @@ const workerFunction = () => {
     setInterval(() => {
         // Emit event
         eventEmitter.emit('checkBirthdatesEvent', { message: 'It is a new day. Check if today is someones birthday.' });
-    }, 15000); // 86400000 is a day
+    }, 86400000); // 86400000 is a day
 }
 
 // Start background worker
